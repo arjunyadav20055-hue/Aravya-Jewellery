@@ -32,6 +32,11 @@ const AdminDashboard = () => {
     fetchUsers();
     fetchOrders();
     fetchGoldRate();
+
+    // Cleanup: dismiss any lingering toasts (like the confirm popup) when leaving the dashboard
+    return () => {
+      toast.dismiss();
+    };
   }, []);
 
   const fetchGoldRate = async () => {
