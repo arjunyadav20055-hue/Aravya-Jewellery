@@ -55,7 +55,7 @@ const AdminDashboard = () => {
 
   const updateGoldRate = (e, carat) => {
     if (e && e.preventDefault) e.preventDefault();
-    
+
     const newRate = carat === "18K" ? newGoldRate18K : newGoldRate20K;
 
     if (!newRate || isNaN(newRate) || newRate <= 0) {
@@ -101,14 +101,14 @@ const AdminDashboard = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const payload = carat === "18K" ? { goldRate18K: Number(rate) } : { goldRate20K: Number(rate) };
-      
+
       const res = await api.put(
         "/settings/gold-price",
         payload,
         { headers: { Authorization: `Bearer ${user?.token}` } }
       );
       toast.success(res.data.message || "Gold rate updated successfully", { id: toastId });
-      
+
       if (carat === "18K") {
         setGoldRate18K(res.data.settings.goldRate18K);
         setPreviousGoldRate18K(res.data.settings.previousGoldRate18K);
@@ -118,7 +118,7 @@ const AdminDashboard = () => {
         setPreviousGoldRate20K(res.data.settings.previousGoldRate20K);
         setNewGoldRate20K("");
       }
-      
+
       fetchProducts(); // Refresh products with new prices
     } catch (err) {
       console.error("Error updating gold rate:", err);
@@ -272,96 +272,96 @@ const AdminDashboard = () => {
       {activeTab === "products" && (
         <>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-        <div className="border border-pink-100 rounded-2xl p-5 bg-white shadow-sm">
-          <p className="text-sm text-gray-500">Total Products</p>
-          <p className="text-3xl font-bold mt-1 text-pink-500">
-            {products.length}
-          </p>
-        </div>
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div className="border border-pink-100 rounded-2xl p-5 bg-white shadow-sm">
+              <p className="text-sm text-gray-500">Total Products</p>
+              <p className="text-3xl font-bold mt-1 text-pink-500">
+                {products.length}
+              </p>
+            </div>
 
-        <div className="border border-pink-100 rounded-2xl p-5 bg-white shadow-sm">
-          <p className="text-sm text-gray-500">Admin Actions</p>
-          <p className="mt-2 text-gray-700">
-            Add, edit, or remove products from inventory
-          </p>
-        </div>
-      </div>
-
-      {/* Products Section */}
-      <div>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Products
-          </h2>
-          <Link
-            to="/admin/add-product"
-            className="bg-pink-400 text-white px-6 py-2 rounded-xl hover:bg-pink-500 transition font-medium text-sm"
-          >
-            + Add Product
-          </Link>
-        </div>
-
-        {products.length === 0 ? (
-          <p className="text-gray-500">No products found.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white border border-pink-100 rounded-2xl
-                           shadow-sm overflow-hidden hover:shadow-lg transition"
-              >
-                {/* Image */}
-                {product.images?.[0] && (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
-
-                {/* Content */}
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg truncate text-gray-900">
-                    {product.name}
-                  </h3>
-
-                  <p className="text-pink-500 mt-1 font-medium">
-                    ₹{product.price}
-                  </p>
-
-                  <div className="flex justify-between text-sm text-gray-500 mt-2">
-                    <span>Stock: {product.stock}</span>
-                    <span>{product.category}</span>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2 mt-4">
-                    <Link
-                      to={`/admin/edit-product/${product._id}`}
-                      className="flex-1 text-center bg-pink-400 text-white py-1.5
-                                 rounded-xl hover:bg-pink-500 transition"
-                    >
-                      Edit
-                    </Link>
-
-                    <button
-                      onClick={() => handleDelete(product._id)}
-                      className="flex-1 bg-red-400 text-white py-1.5
-                                 rounded-xl hover:bg-red-500 transition"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <div className="border border-pink-100 rounded-2xl p-5 bg-white shadow-sm">
+              <p className="text-sm text-gray-500">Admin Actions</p>
+              <p className="mt-2 text-gray-700">
+                Add, edit, or remove products from inventory
+              </p>
+            </div>
           </div>
-        )}
-      </div>
-      </>
+
+          {/* Products Section */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Products
+              </h2>
+              <Link
+                to="/admin/add-product"
+                className="bg-pink-400 text-white px-6 py-2 rounded-xl hover:bg-pink-500 transition font-medium text-sm"
+              >
+                + Add Product
+              </Link>
+            </div>
+
+            {products.length === 0 ? (
+              <p className="text-gray-500">No products found.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <div
+                    key={product._id}
+                    className="bg-white border border-pink-100 rounded-2xl
+                           shadow-sm overflow-hidden hover:shadow-lg transition"
+                  >
+                    {/* Image */}
+                    {product.images?.[0] && (
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-48 object-cover"
+                      />
+                    )}
+
+                    {/* Content */}
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg truncate text-gray-900">
+                        {product.name}
+                      </h3>
+
+                      <p className="text-pink-500 mt-1 font-medium">
+                        ₹{product.price}
+                      </p>
+
+                      <div className="flex justify-between text-sm text-gray-500 mt-2">
+                        <span>Stock: {product.stock}</span>
+                        <span>{product.category}</span>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex gap-2 mt-4">
+                        <Link
+                          to={`/admin/edit-product/${product._id}`}
+                          className="flex-1 text-center bg-pink-400 text-white py-1.5
+                                 rounded-xl hover:bg-pink-500 transition"
+                        >
+                          Edit
+                        </Link>
+
+                        <button
+                          onClick={() => handleDelete(product._id)}
+                          className="flex-1 bg-red-400 text-white py-1.5
+                                 rounded-xl hover:bg-red-500 transition"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {activeTab === "users" && (
