@@ -99,14 +99,9 @@ const AdminDashboard = () => {
   const performGoldRateUpdate = async (rate, carat) => {
     const toastId = toast.loading(`Updating ${carat} gold rate...`);
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
       const payload = carat === "18K" ? { goldRate18K: Number(rate) } : { goldRate20K: Number(rate) };
 
-      const res = await api.put(
-        "/settings/gold-price",
-        payload,
-        { headers: { Authorization: `Bearer ${user?.token}` } }
-      );
+      const res = await api.put("/settings/gold-price", payload);
       toast.success(res.data.message || "Gold rate updated successfully", { id: toastId });
 
       if (carat === "18K") {
@@ -128,10 +123,7 @@ const AdminDashboard = () => {
 
   const fetchOrders = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const res = await api.get("/orders", {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
+      const res = await api.get("/orders");
       setOrders(res.data);
     } catch (err) {
       console.error("Error fetching orders:", err);
@@ -140,12 +132,7 @@ const AdminDashboard = () => {
 
   const handleStatusChange = async (orderId, status) => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      await api.put(
-        `/orders/${orderId}/status`,
-        { status },
-        { headers: { Authorization: `Bearer ${user?.token}` } }
-      );
+      await api.put(`/orders/${orderId}/status`, { status });
       setOrders((prev) =>
         prev.map((o) => (o._id === orderId ? { ...o, status } : o))
       );
@@ -156,10 +143,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const res = await api.get("/users", {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
+      const res = await api.get("/users");
       setUsers(res.data);
     } catch (err) {
       console.error("Error fetching users:", err);
@@ -215,10 +199,7 @@ const AdminDashboard = () => {
   const performDelete = async (id) => {
     const toastId = toast.loading("Deleting product...");
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      await api.delete(`/products/${id}`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
+      await api.delete(`/products/${id}`);
 
       setProducts(products.filter((p) => p._id !== id));
       toast.success("Product deleted successfully", { id: toastId });
