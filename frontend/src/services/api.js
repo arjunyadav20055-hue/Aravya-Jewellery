@@ -19,7 +19,11 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("user");
-      window.location.href = "/login";
+      // Prevent full page reload loop if we are already on the login page
+      // Also prevent redirecting to /login if the error is from the login request itself
+      if (window.location.pathname !== "/login") {
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }
