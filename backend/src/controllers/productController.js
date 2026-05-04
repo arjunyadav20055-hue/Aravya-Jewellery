@@ -31,7 +31,9 @@ exports.addProduct = async (req, res) => {
     }
 
     let settings = await Settings.findOne();
-    const goldPricePerGram = settings ? settings.goldPricePerGram : 0;
+    if (!settings) {
+      settings = { goldRate18K: 0, goldRate20K: 0 };
+    }
 
     const newProductData = {
       name,
@@ -43,9 +45,10 @@ exports.addProduct = async (req, res) => {
       gst: Number(gst) || 0,
       profitMargin: Number(profitMargin) || 0,
       images: imageUrls,
+      carat: req.body.carat || "18K", // Ensure carat is set
     };
 
-    newProductData.price = calculatePrice(newProductData, goldPricePerGram);
+    newProductData.price = calculatePrice(newProductData, settings);
 
     const product = await Product.create(newProductData);
 
@@ -84,7 +87,9 @@ exports.updateProduct = async (req, res) => {
     const { name, description, category, stock, goldWeight, makingCharges, gst, profitMargin } = req.body;
 
     let settings = await Settings.findOne();
-    const goldPricePerGram = settings ? settings.goldPricePerGram : 0;
+    if (!settings) {
+      settings = { goldRate18K: 0, goldRate20K: 0 };
+    }
 
     const updateData = {
       name,
@@ -95,9 +100,10 @@ exports.updateProduct = async (req, res) => {
       makingCharges: Number(makingCharges) || 0,
       gst: Number(gst) || 0,
       profitMargin: Number(profitMargin) || 0,
+      carat: req.body.carat || "18K", // Ensure carat is set
     };
 
-    updateData.price = calculatePrice(updateData, goldPricePerGram);
+    updateData.price = calculatePrice(updateData, settings);
 
     const product = await Product.findByIdAndUpdate(
       req.params.id,
